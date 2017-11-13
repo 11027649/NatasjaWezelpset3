@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Natasja Wezel -- pset3</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="menu">Menu</string>
+    <string name="restaurant">Restaurant</string>
+    <string name="textview">TextView</string>
+    <string name="your_order">Your Order</string>
+    <string name="edit">Edit</string>
+    <string name="submit">Submit</string>
+    <string name="here_s_your_order">Here\'s your order...</string>
+    <string name="this_restaurant_s_menu">This Restaurant\'s Menu</string>
+</resources>
