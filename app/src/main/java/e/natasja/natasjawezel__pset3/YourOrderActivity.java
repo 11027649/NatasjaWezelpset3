@@ -10,6 +10,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Size;
+import android.util.SizeF;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -44,6 +46,7 @@ public class YourOrderActivity extends AppCompatActivity {
     ArrayAdapter dishesListAdapter;
     boolean submitted;
     AlertDialog dialog;
+    TextView waitingTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,7 @@ public class YourOrderActivity extends AppCompatActivity {
         Button orderButton = findViewById(R.id.orderButton);
         orderButton.setBackgroundColor(Color.GRAY);
         title = findViewById(R.id.title);
+        waitingTime = findViewById(R.id.waitingTime);
 
         // 1. Instantiate an AlertDialog.Builder with its constructor
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -72,6 +76,7 @@ public class YourOrderActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
                 ordersArray.clear();
+                submitted = false;
                 soups = 0;
                 salads = 0;
                 pesto_linguinis = 0;
@@ -118,6 +123,10 @@ public class YourOrderActivity extends AppCompatActivity {
             salads += 1;
         }
         else {
+        }
+
+        if ((pizzas == 0) && (sandwiches == 0) && (pesto_linguinis == 0) && (soups == 0) && (spaghettis == 0) && (salads == 0)) {
+            waitingTime.setText("You've not added any dishes yet.");
         }
 
         dishesListView = (ListView) findViewById(R.id.dishes);
@@ -247,13 +256,23 @@ public class YourOrderActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         // do something on back.
-        dialog.show();
-        return;
+        if (submitted == true) {
+            dialog.show();
+            return;
+        }
+        else {
+            Intent goToStart = new Intent(YourOrderActivity.this, mainActivity.class);
+            startActivity(goToStart);
+        }
+
     }
 
     public void submit(View view) {
+        if (waitingTime.getText().equals("You've not added any dishes yet.")) {
+            Toast.makeText(YourOrderActivity.this, "You can't submit because you haven't added any dishes.", Toast.LENGTH_SHORT).show();
+        }
 
-        if (submitButton.getText().equals("Submit") ){
+        else if (submitButton.getText().equals("Submit")){
             // Instantiate the RequestQueue.
             String url = "https://resto.mprog.nl/order";
             Log.d("Submit", "Submitbutton text equals submit");
@@ -267,7 +286,6 @@ public class YourOrderActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                TextView waitingTime = findViewById(R.id.waitingTime);
                                 waitingTime.setText("The expected waiting time is: " + response.getString("preparation_time") + " minutes");
                                 submitButton.setVisibility(View.INVISIBLE);
                                 editButton.setVisibility(View.INVISIBLE);
