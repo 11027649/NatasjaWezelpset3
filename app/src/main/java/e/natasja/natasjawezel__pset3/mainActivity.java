@@ -1,12 +1,14 @@
 package e.natasja.natasjawezel__pset3;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,8 +17,15 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class mainActivity extends AppCompatActivity {
@@ -26,64 +35,85 @@ public class mainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // find listview dishesList
         ListView dishesListView = (ListView) findViewById(R.id.dishes);
 
-        final TextView mTextView = (TextView) findViewById(R.id.text);
+        final List<String> categoriesArray = new ArrayList<String>();
+        final ArrayAdapter dishesListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, categoriesArray);
+        dishesListView.setAdapter(dishesListAdapter);
+
+        Button menuButton = findViewById(R.id.menuButton);
+        menuButton.setBackgroundColor(Color.GRAY);
 
         // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
         String url ="https://resto.mprog.nl/categories";
 
+        RequestQueue queue = Volley.newRequestQueue(this);
+
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        JSONArray group = response.getJSONArray("categories");
 
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        mTextView.setText("Response is: "+ response.substring(0,500));
+                        // loop over JsonArray group and put the words in dishesArray
+                        for(int i = 0; i < group.length(); i++) {
+                            categoriesArray.add(group.getString(i));
+                        }
+
+                        // make sure the list changes
+                        dishesListAdapter.notifyDataSetChanged();
+
+                    } catch (JSONException e) {
+
+                        // show error (in case of an error)
+                        Toast.makeText(mainActivity.this,"JSONObject to JSONArray didnt go right", Toast.LENGTH_SHORT).show();
                     }
+                }
                 }, new Response.ErrorListener() {
-
             @Override
             public void onErrorResponse(VolleyError error) {
-                mTextView.setText("That didn't work!");
+
+                // show error (in case of error)
+                Toast.makeText(mainActivity.this, "No response on Request.", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
+        queue.add(jsObjRequest);
 
 
-
-
-        String[] dishesArray = {"Starters", "Main dishes", "Desserts", "Side dishes",
-                "Hot/cold beverages", "Alcoholic beverages"};
-
-        ListAdapter dishesListAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_expandable_list_item_1, dishesArray);
-
-        dishesListView.setAdapter(dishesListAdapter);
-
+        // if listItem is clicked, start intent to go to menu
         dishesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
+                // show toast with what category is picked
                 String cuisineCoursePicked = "You selected " +
                         String.valueOf(adapterView.getItemAtPosition(position));
 
                 Toast.makeText(mainActivity.this, cuisineCoursePicked, Toast.LENGTH_SHORT).show();
+
+                // start intent to go to menu where that category is showed
+                Intent menuItemSelected = new Intent(mainActivity.this, MenuActivity.class);
+                menuItemSelected.putExtra("category", String.valueOf(adapterView.getItemAtPosition(position)));
+                startActivity(menuItemSelected);
             }
         });
     }
 
+    // if menu button is clicked, go to menu
     public void toMenu(View view) {
         Intent intent = new Intent(this, MenuActivity.class);
+        intent.putExtra("category", "");
         startActivity(intent);
     }
 
+    // if order button is clicked, go to order
     public void toOrder (View view) {
         Intent intent = new Intent(this, YourOrderActivity.class);
+        intent.putExtra("name", "");
         startActivity(intent);
     }
 }

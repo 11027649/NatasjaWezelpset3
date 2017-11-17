@@ -2,35 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="e.natasja.natasjawezel__pset3.mainActivity">
 
     <TextView
-        android:id="@+id/message"
+        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="cursive"
-        android:text="@string/restaurant"
+        android:text="@string/this_restaurant_s_menu"
         android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/textview" />
+        android:textSize="24sp" />
 
     <ListView
         android:id="@+id/dishes"
         android:layout_width="match_parent"
-        android:layout_height="421dp"></ListView>
+        android:layout_height="441dp"
+        android:layout_weight="1">
+
+    </ListView>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -9,49 +9,57 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="97dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/editButton"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="casual"
+            android:onClick="edit"
             android:text="@string/edit"
             android:textAllCaps="false"
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="cursive"
+            android:onClick="submit"
             android:text="@string/here_s_your_order"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textSize="24sp" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/submitButton"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="casual"
             android:text="@string/submit"
             android:textAllCaps="false"
+            android:onClick="submit"
             android:textSize="14sp" />
     </LinearLayout>
 
     <ListView
         android:id="@+id/dishes"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="446dp"
         android:layout_weight="1">
 
     </ListView>
+
+    <TextView
+        android:id="@+id/waitingTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -62,7 +70,6 @@
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:id="@+id/menuButton"
             android:onClick="toMenu"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -75,7 +82,6 @@
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:id="@+id/orderButton"
             android:onClick="toOrder"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
